@@ -134,6 +134,8 @@ func NewProvider(initOptions *InitOptions) (Provider, error) {
 		return NewSkeletonProvider(configs), nil
 	case VsphereName:
 		return NewVsphereProvider(configs), nil
+	case GardenerName:
+		return NewGardenerProvider(configs), nil
 	default:
 		return nil, fmt.Errorf("unsupported provider name: %s", initOptions.ProviderName)
 	}
@@ -141,12 +143,13 @@ func NewProvider(initOptions *InitOptions) (Provider, error) {
 
 func parseConfigs(configs []string) map[string]string {
 	cfgMap := map[string]string{}
-
+	fmt.Println("CONFIGSS>>>>>", configs)
 	for _, c := range configs {
 		pair := strings.Split(c, "=")
 		if len(pair) != 2 {
 			fmt.Println("error: unused provider config:", c)
 		}
+		fmt.Println(">>>>>>", pair[0], pair[1])
 		cfgMap[pair[0]] = pair[1]
 	}
 	return cfgMap

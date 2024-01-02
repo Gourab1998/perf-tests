@@ -30,8 +30,11 @@ const (
 	LocalName       = "local"
 	SkeletonName    = "skeleton"
 	VsphereName     = "vsphere"
+	GardenerName    = "gardener"
 )
 
 const (
-	RootKubeConfigKey = "ROOT_KUBECONFIG"
+	RootKubeConfigKey  = "ROOT_KUBECONFIG"
+	ShootKubeConfigKey = "SHOOT_KUBECONFIG"
+	SeedKubeConfigKey  = "SEED_KUBECONFIG"
 )
