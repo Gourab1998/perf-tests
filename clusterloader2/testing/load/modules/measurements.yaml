@@ -50,6 +50,7 @@ steps:
     Method: APIResponsivenessPrometheus
     Params:
       action: {{$action}}
+      prometheusClient: managed
 {{if not $USE_SIMPLE_LATENCY_QUERY}}
       enableViolations: {{$ENABLE_VIOLATIONS_FOR_API_CALL_PROMETHEUS}}
       allowedSlowCalls: {{$ALLOWED_SLOW_API_CALLS}}
@@ -59,6 +60,7 @@ steps:
     Method: APIResponsivenessPrometheus
     Params:
       action: {{$action}}
+      prometheusClient: managed
       enableViolations: {{$ENABLE_VIOLATIONS_FOR_API_CALL_PROMETHEUS_SIMPLE}}
       useSimpleLatencyQuery: true
       summaryName: APIResponsivenessPrometheus_simple
@@ -75,6 +77,7 @@ steps:
     Method: InClusterNetworkLatency
     Params:
       action: {{$action}}
+      prometheusClient: managed
       checkProbesReadyTimeout: {{$PROBE_MEASUREMENTS_CHECK_PROBES_READY_TIMEOUT}}
       replicasPerProbe: {{AddInt 2 (DivideInt .Nodes 100)}}
       pingSleepDuration: {{$PROBE_MEASUREMENTS_PING_SLEEP_DURATION}}
@@ -85,6 +88,7 @@ steps:
     Method: NodeLocalDNSLatencyPrometheus
     Params:
       action: {{$action}}
+      prometheusClient: managed
       enableViolations: true
       threshold: {{$NODE_LOCAL_DNS_LATENCY_THRESHOLD}}
 {{end}}
@@ -93,6 +97,7 @@ steps:
     Method: SLOMeasurement
     Params:
       action: {{$action}}
+      prometheusClient: managed
       checkProbesReadyTimeout: {{$PROBE_MEASUREMENTS_CHECK_PROBES_READY_TIMEOUT}}
       replicasPerProbe: {{AddInt 2 (DivideInt .Nodes 100)}}
 {{end}}
@@ -101,12 +106,14 @@ steps:
     Method: NetworkProgrammingLatency
     Params:
       action: {{$action}}
+      prometheusClient: managed
       enableViolations: {{$ENABLE_VIOLATIONS_FOR_NETWORK_PROGRAMMING_LATENCIES}}
       threshold: {{$NETWORK_PROGRAMMING_LATENCY_THRESHOLD}}
   - Identifier: Kube-proxy partial iptables restore failures
     Method: GenericPrometheusQuery
     Params:
       action: {{$action}}
+      prometheusClient: managed
       metricName: KubeProxyIptablesRestoreFailures
       metricVersion: v1alpha1
       unit: failures
@@ -121,6 +128,7 @@ steps:
     Method: KubeStateMetricsLatency
     Params:
       action: {{$action}}
+      prometheusClient: managed
 {{end}}
 {{if $PROMETHEUS_SCRAPE_METRICS_SERVER_METRICS}}
   - Identifier: MetricsServerPrometheus
@@ -134,6 +142,7 @@ steps:
     Method: APIAvailability
     Params:
       action: {{$action}}
+      prometheusClient: managed
       pollFrequency: "5s"
       hostPollTimeoutSeconds: 5
       threshold: {{$API_AVAILABILITY_PERCENTAGE_THRESHOLD}}
@@ -143,6 +152,7 @@ steps:
     Method: ContainerRestarts
     Params:
       action: {{$action}}
+      prometheusClient: managed
       enableViolations: true
       defaultAllowedRestarts: {{$ALLOWED_CONTAINER_RESTARTS}}
       customAllowedRestarts: {{YamlQuote $CUSTOM_ALLOWED_CONTAINER_RESTARTS 4}}
@@ -152,6 +162,7 @@ steps:
     Method: GenericPrometheusQuery
     Params:
       action: {{$action}}
+      prometheusClient: managed
       metricName: Container CPU
       metricVersion: v1
       unit: cores
@@ -168,6 +179,7 @@ steps:
     Method: GenericPrometheusQuery
     Params:
       action: {{$action}}
+      prometheusClient: managed
       metricName: Container Memory
       metricVersion: v1
       unit: MiB
@@ -186,6 +198,7 @@ steps:
     Method: GenericPrometheusQuery
     Params:
       action: {{$action}}
+      prometheusClient: managed
       metricName: Terminated Watches
       metricVersion: v1
       dimensions:
@@ -210,6 +223,7 @@ steps:
     Method: GenericPrometheusQuery
     Params:
       action: {{$action}}
+      prometheusClient: managed
       metricName: Quota usage
       metricVersion: v1
       prometheusClient: managed
@@ -235,6 +249,7 @@ steps:
     Method: TestMetrics
     Params:
       action: {{$action}}
+      prometheusClient: managed
       systemPodMetricsEnabled: {{$ENABLE_SYSTEM_POD_METRICS}}
       clusterOOMsIgnoredProcesses: {{YamlQuote $CLUSTER_OOMS_IGNORED_PROCESSES 4}}
       clusterOOMsTrackerEnabled: {{$ENABLE_CLUSTER_OOMS_TRACKER}}
@@ -243,11 +258,13 @@ steps:
 - module:
     path: modules/dns-performance-metrics.yaml
     params:
+      prometheusClient: managed
       action: {{$action}}
 
 {{if $ENABLE_NETWORK_POLICY_ENFORCEMENT_LATENCY_TEST}}
 - module:
     path: modules/network-policy/net-policy-metrics.yaml
     params:
+      prometheusClient: managed
       action: {{$action}}
 {{end}}

@@ -27,6 +27,12 @@ type GardenerProvider struct {
 	features Features
 }
 
+type ManagePrometheus struct {
+	URL      string
+	UserName string
+	Pssword  string
+}
+
 func NewGardenerProvider(config map[string]string) Provider {
 
 	fmt.Println("SEEEEDDDD>>>>>>>>>>>", config[SeedKubeConfigKey])

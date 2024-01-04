@@ -107,7 +107,6 @@ func (e *PrometheusQueryExecutor) Query(query string, queryTime time.Time) ([]*m
 
 	var body []byte
 	var queryErr error
-
 	klog.V(2).Infof("Executing %q at %v", query, queryTime.Format(time.RFC3339))
 	if err := wait.PollImmediate(queryInterval, queryTimeout, func() (bool, error) {
 		body, queryErr = e.client.Query(query, queryTime)
@@ -127,6 +126,7 @@ func (e *PrometheusQueryExecutor) Query(query string, queryTime time.Time) ([]*m
 	}
 
 	samples, err := ExtractMetricSamples2(body)
+	fmt.Println(">>>>>\n\n BODYYYY", string(body))
 	if err != nil {
 		return nil, fmt.Errorf("extracting error: %v", err)
 	}

@@ -6,16 +6,16 @@
 
 #Constants
 # Cater for the case where the number of nodes is less than nodes per namespace. See https://github.com/kubernetes/perf-tests/issues/887
-{{$NODES_PER_NAMESPACE := MinInt .Nodes (DefaultParam .NODES_PER_NAMESPACE 100)}}
+{{$NODES_PER_NAMESPACE := MinInt .Nodes (DefaultParam .NODES_PER_NAMESPACE 1)}}
 # See https://github.com/kubernetes/perf-tests/pull/1667#issuecomment-769642266
-{{$IS_SMALL_CLUSTER := lt .Nodes 100}}
-{{$PODS_PER_NODE := DefaultParam .PODS_PER_NODE 30}}
-{{$LOAD_TEST_THROUGHPUT := DefaultParam .CL2_LOAD_TEST_THROUGHPUT 10}}
+{{$IS_SMALL_CLUSTER := lt .Nodes 1}}
+{{$PODS_PER_NODE := DefaultParam .PODS_PER_NODE 3}}
+{{$LOAD_TEST_THROUGHPUT := DefaultParam .CL2_LOAD_TEST_THROUGHPUT 1}}
 {{$DELETE_TEST_THROUGHPUT := DefaultParam .CL2_DELETE_TEST_THROUGHPUT $LOAD_TEST_THROUGHPUT}}
 {{$RATE_LIMIT_POD_CREATION := DefaultParam .CL2_RATE_LIMIT_POD_CREATION true}}
-{{$BIG_GROUP_SIZE := DefaultParam .BIG_GROUP_SIZE 250}}
-{{$MEDIUM_GROUP_SIZE := DefaultParam .MEDIUM_GROUP_SIZE 30}}
-{{$SMALL_GROUP_SIZE := DefaultParam .SMALL_GROUP_SIZE 5}}
+{{$BIG_GROUP_SIZE := DefaultParam .BIG_GROUP_SIZE 5}}
+{{$MEDIUM_GROUP_SIZE := DefaultParam .MEDIUM_GROUP_SIZE 3}}
+{{$SMALL_GROUP_SIZE := DefaultParam .SMALL_GROUP_SIZE 2}}
 {{$SMALL_STATEFUL_SETS_PER_NAMESPACE := DefaultParam .SMALL_STATEFUL_SETS_PER_NAMESPACE 1}}
 {{$MEDIUM_STATEFUL_SETS_PER_NAMESPACE := DefaultParam .MEDIUM_STATEFUL_SETS_PER_NAMESPACE 1}}
 {{$ENABLE_CHAOSMONKEY := DefaultParam .ENABLE_CHAOSMONKEY false}}
@@ -54,7 +54,7 @@
 # pod-startup-latency or scheduler-throughput. The purpose of it is to avoid
 # problems in small clusters where we wouldn't have enough samples (pods) to
 # measure things accurately.
-{{$MIN_PODS_IN_SMALL_CLUSTERS := 500}}
+{{$MIN_PODS_IN_SMALL_CLUSTERS := 5}}
 
 # BEGIN scheduler-throughput section
 # TODO( https://github.com/kubernetes/perf-tests/issues/1027): Lower the number of "min-pods" once we fix the scheduler throughput measurement.
@@ -196,17 +196,16 @@ steps:
       smallJobSize: {{$SMALL_GROUP_SIZE}}
       smallJobsPerNamespace: 1
 
-{{if not $IS_SMALL_CLUSTER}}
 # BEGIN scheduler throughput
 - module:
     path: modules/scheduler-throughput.yaml
     params:
       action: create
+      prometheusClient: managed
       namespaces: {{$namespaces}}
       replicasPerNamespace: 1
       schedulerThroughputNamespaces: {{$schedulerThroughputNamespaces}}
       schedulerThroughputPodsPerDeployment: {{$schedulerThroughputPodsPerDeployment}}
-{{end}}
 
 - module:
     path: modules/dns-k8s-hostnames.yaml
@@ -252,7 +251,6 @@ steps:
 
 {{if not $EXIT_AFTER_EXEC}}
 
-{{if not $IS_SMALL_CLUSTER}}
 - module:
     path: modules/scheduler-throughput.yaml
     params:
@@ -262,7 +260,6 @@ steps:
       schedulerThroughputNamespaces: {{$schedulerThroughputNamespaces}}
       schedulerThroughputPodsPerDeployment: {{$schedulerThroughputPodsPerDeployment}}
 # END scheduler throughput
-{{end}}
 
 {{if not $IS_SMALL_CLUSTER}}
 # TODO(kubernetes/perf-tests/issues/1024): We shouldn't have a dedicated module for measuring pod-startup-latency.
