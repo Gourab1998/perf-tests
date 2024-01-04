@@ -126,7 +126,6 @@ func (e *PrometheusQueryExecutor) Query(query string, queryTime time.Time) ([]*m
 	}
 
 	samples, err := ExtractMetricSamples2(body)
-	fmt.Println(">>>>>\n\n BODYYYY", string(body))
 	if err != nil {
 		return nil, fmt.Errorf("extracting error: %v", err)
 	}

@@ -46,7 +46,7 @@ func (bat *BasicAuthTransport) RoundTrip(req *http.Request) (*http.Response, err
 
 // NewGardenerManagedPrometheusClient returns an HTTP client for talking to
 // the Gardener Managed Service for Prometheus.
-func NewGardenerManagedPrometheusClient() (Client, error) {
+func NewGardenerManagedPrometheusClient(host string, username string, password string) (Client, error) {
 	client := &http.Client{
 		Transport: &http.Transport{
 			Proxy: http.ProxyFromEnvironment,
@@ -55,13 +55,13 @@ func NewGardenerManagedPrometheusClient() (Client, error) {
 
 	// Set Basic Authentication
 	client.Transport = &BasicAuthTransport{
-		Username: "admin",
-		Password: "jabWZf5AxsjbHyP5y1IzZC4tfwBDUmaG",
+		Username: username,
+		Password: password,
 		Wrapped:  http.DefaultTransport,
 	}
 	return &gardenerManagedPrometheusClient{
 		client: client,
-		uri:    "https://p-i030268--perf-test.ingress.aws-ha.seed.dev.k8s.ondemand.com/api/v1/query",
+		uri:    "https://" + host + "/api/v1/query",
 	}, nil
 }
 

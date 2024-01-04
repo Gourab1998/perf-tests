@@ -34,7 +34,7 @@ const (
 )
 
 const (
-	RootKubeConfigKey  = "ROOT_KUBECONFIG"
-	ShootKubeConfigKey = "SHOOT_KUBECONFIG"
-	SeedKubeConfigKey  = "SEED_KUBECONFIG"
+	RootKubeConfigKey         = "ROOT_KUBECONFIG"
+	GardenerSeedKubeConfigKey = "SEED_KUBECONFIG"
+	GardenerShootNamespace    = "SHOOT_NAMESPACE"
 )
