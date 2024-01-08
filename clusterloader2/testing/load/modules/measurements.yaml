@@ -39,6 +39,7 @@
 {{$ENABLE_VIOLATIONS_FOR_NETWORK_PROGRAMMING_LATENCIES := DefaultParam .CL2_ENABLE_VIOLATIONS_FOR_NETWORK_PROGRAMMING_LATENCIES false}}
 {{$NETWORK_PROGRAMMING_LATENCY_THRESHOLD := DefaultParam .CL2_NETWORK_PROGRAMMING_LATENCY_THRESHOLD "30s"}}
 {{$NETWORK_LATENCY_THRESHOLD := DefaultParam .CL2_NETWORK_LATENCY_THRESHOLD "0s"}}
+{{$PROMETHEUS_ETCD_METRICS := DefaultParam .CL2_PROMETHEUS_ETCD_METRICS true}}
 
 # Probe measurements shared parameter
 {{$PROBE_MEASUREMENTS_CHECK_PROBES_READY_TIMEOUT := DefaultParam .CL2_PROBE_MEASUREMENTS_CHECK_PROBES_READY_TIMEOUT "15m"}}
@@ -235,6 +236,23 @@ steps:
         query: quantile_over_time(0.99, sum by (quota_metric) (irate(serviceruntime_googleapis_com:quota_rate_net_usage{monitored_resource="consumer_quota"}[1m]))[%v:]) * 60
       - name: max
         query: max_over_time(sum by (quota_metric) (irate(serviceruntime_googleapis_com:quota_rate_net_usage{monitored_resource="consumer_quota"}[1m]))[%v:]) * 60
+{{end}}
+{{if $PROMETHEUS_ETCD_METRICS}}
+  - Identifier: ETCD Metrics
+    Method: GenericPrometheusQuery
+    Params:
+      action: {{$action}}
+      prometheusClient: managed
+      metricName: Etcd metrics
+      unit: ms
+      metricVersion: v1
+      queries:
+      - name: Perc99
+        query: histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))
+      - name: Perc90
+        query: histogram_quantile(0.90, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))
+      - name: Perc50
+        query: histogram_quantile(0.50, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))
 {{end}}
 {{if $ENABLE_CEP_PROPAGATION_DELAY_MEASUREMENT}}
   - Identifier: CiliumEndpointPropagationDelay
