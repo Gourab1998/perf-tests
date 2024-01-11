@@ -243,9 +243,10 @@ steps:
     Params:
       action: {{$action}}
       prometheusClient: managed
-      metricName: Etcd metrics
+      metricName: Backend Commit Duration
       unit: ms
       metricVersion: v1
+      threshold: 10ms
       queries:
       - name: Perc99
         query: histogram_quantile(0.99, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
@@ -253,6 +254,22 @@ steps:
         query: histogram_quantile(0.90, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
       - name: Perc50
         query: histogram_quantile(0.50, sum(rate(etcd_disk_backend_commit_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
+  - Identifier: ETCD Metrics
+    Method: GenericPrometheusQuery
+    Params:
+      action: {{$action}}
+      prometheusClient: managed
+      metricName: Wal Sync Duration
+      unit: ms
+      metricVersion: v1
+      threshold: 10ms
+      queries:
+      - name: Perc99
+        query: histogram_quantile(0.99, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
+      - name: Perc90
+        query: histogram_quantile(0.90, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
+      - name: Perc50
+        query: histogram_quantile(0.50, sum(rate(etcd_disk_wal_fsync_duration_seconds_bucket{role=~"main"}[%v:])) by (instance, le))*1000
 {{end}}
 {{if $ENABLE_CEP_PROPAGATION_DELAY_MEASUREMENT}}
   - Identifier: CiliumEndpointPropagationDelay
