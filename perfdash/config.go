@@ -374,6 +374,11 @@ var (
 				OutputFilePrefix: "EtcdMetrics",
 				Parser:           parseHistogramMetric("walFsyncDuration"),
 			}},
+			"BackupDefragmentation": []TestDescription{{
+				Name:             "load",
+				OutputFilePrefix: "EtcdMetrics",
+				Parser:           parseHistogramMetric("backupDefragmentation"),
+			}},
 			"LoadBackendCommitDuration": []TestDescription{{
 				Name:             "load",
 				OutputFilePrefix: "EtcdMetrics",

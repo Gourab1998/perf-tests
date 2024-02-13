@@ -349,6 +349,7 @@ type etcdMetrics struct {
 	SnapshotSaveTotalDuration histogramVec `json:"snapshotSaveTotalDuration"`
 	PeerRoundTripTime         histogramVec `json:"peerRoundTripTime"`
 	WalFsyncDuration          histogramVec `json:"walFsyncDuration"`
+	BackupDefragmentation     histogramVec `json:"backupDefragmentation"`
 	MaxDatabaseSize           float64      `json:"maxDatabaseSize"`
 }
 
@@ -372,6 +373,8 @@ func parseHistogramMetric(metricName string) func(data []byte, buildNumber int, 
 			histogramVecMetric = obj.PeerRoundTripTime
 		case "walFsyncDuration":
 			histogramVecMetric = obj.WalFsyncDuration
+		case "backupDefragmentation":
+			histogramVecMetric = obj.BackupDefragmentation
 		default:
 			klog.Errorf("unknown metric name: %s", metricName)
 		}
