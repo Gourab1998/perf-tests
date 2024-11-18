@@ -6,10 +6,13 @@
   </head>
   <body>
     <div layout="column" style="margin-top: 20px; width: 80%" offset="10" ng-controller="AppCtrl">
-      <md-toolbar layout="row" layout-align="space-around center">
-        <h1 class="md-display-2">Performance Dashboard</h1>
-        <!-- TODO: Need a better logo here -->
-        <a href="https://k8s.io"><img src="k8s_logo.png" style="width:84; height: 84" /></a>
+      <md-toolbar layout="row" layout-align="start center" style="background-color: 2c2c2c;padding-left:50px">
+        <h1 class="md-display-2" style="display: flex; align-items: center">
+          <a href="https://pages.github.tools.sap/kubernetes/gardener/">
+            <img src="./gardener_logo.svg" style="width:84px; height:84px; margin-right:30px;" />
+          </a>
+          Performance Dashboard
+        </h1>
       </md-toolbar>
       <div id="content" class="md-whiteframe-z2" style="padding: 20px;">
         <div style="width: 200px; display: inline-block;">

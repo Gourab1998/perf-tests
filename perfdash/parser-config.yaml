@@ -1,0 +1,58 @@
+prowjob_namespace: prow
+periodics:
+- interval: 1m
+  agent: kubernetes
+  name: temp
+  tags:
+  - "perfDashPrefix: gardener-performance"
+  - "perfDashJobType: performance"
+  - "perfDashBuildsCount: 200"
+  labels:
+    preset-kube-file: "true"
+    preset-loadconfig-file: "true" 
+    preset-cl2-env: "true"
+  decorate: true
+  decoration_config:
+    timeout: 120m
+- interval: 1m
+  agent: kubernetes
+  name: request-benchmark
+  tags:
+  - "perfDashPrefix: benchmark"
+  - "perfDashJobType: performance"
+  - "perfDashBuildsCount: 200"
+  labels:
+    preset-kube-file: "true"
+    preset-loadconfig-file: "true"
+    preset-cl2-env: "true"
+  decorate: true
+  decoration_config:
+    timeout: 120m
+- interval: 1m
+  agent: kubernetes
+  name: disk-attach-detach-aws
+  tags:
+  - "perfDashPrefix: aws"
+  - "perfDashJobType: performance"
+  - "perfDashBuildsCount: 200"
+  labels:
+    preset-kube-file: "true"
+    preset-loadconfig-file: "true" 
+    preset-cl2-env: "true"
+  decorate: true
+  decoration_config:
+    timeout: 120m
+- interval: 1m
+  agent: kubernetes
+  name: disk-attach-detach-gcp
+  tags:
+  - "perfDashPrefix: gcp"
+  - "perfDashJobType: performance"
+  - "perfDashBuildsCount: 200"
+  labels:
+    preset-kube-file: "true"
+    preset-loadconfig-file: "true" 
+    preset-cl2-env: "true"
+  decorate: true
+  decoration_config:
+    timeout: 120m

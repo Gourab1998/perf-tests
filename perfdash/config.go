@@ -496,9 +496,19 @@ var (
 				Parser:           parseContainerRestarts,
 			}},
 		},
-		"GenericMeasurements": {
+		"DiskDetachAndReattach": {
 			"GenericMeasurements": []TestDescription{{
 				OutputFilePrefix:            GenericPrometheusQueryMeasurementName,
+				Parser:                      parsePerfData,
+				FetchMetricNameFromArtifact: true,
+			}},
+			"StatefulSetCreationMeasurements": []TestDescription{{
+				OutputFilePrefix:            "StatefulPodStartupLatency_CreatePhasePodStartupLatency",
+				Parser:                      parsePerfData,
+				FetchMetricNameFromArtifact: true,
+			}},
+			"DiskReattachToAnotherNode": []TestDescription{{
+				OutputFilePrefix:            "StatefulPodStartupLatency_PodStartupWithDetachAndReattachVolume",
 				Parser:                      parsePerfData,
 				FetchMetricNameFromArtifact: true,
 			}},
